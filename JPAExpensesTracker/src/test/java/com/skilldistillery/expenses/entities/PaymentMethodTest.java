@@ -1,7 +1,6 @@
 package com.skilldistillery.expenses.entities;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -14,11 +13,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class ExpenseTest {
-
+class PaymentMethodTest {
+	
 	private static EntityManagerFactory emf;
 	private EntityManager em;
-	private Expense exp;
+	private PaymentMethod pm;
 		
 		@BeforeAll
 		static void setUpBeforeClass() throws Exception {
@@ -33,37 +32,31 @@ class ExpenseTest {
 		@BeforeEach
 		void setUp() throws Exception {
 			em = emf.createEntityManager();
-			exp = em.find(Expense.class, 1);
+			pm = em.find(PaymentMethod.class, 1);
 		}
 
 		@AfterEach
 		void tearDown() throws Exception {
 			em.close();
-			exp = null;
+			pm = null;
 		}
 
 		@Test
-		@DisplayName("testing expense mapping")
+		@DisplayName("testing payment method mapping")
 		void test1() {
 			
-			assertNotNull(exp);
-			assertEquals("facebook ads", exp.getName());
+			assertNotNull(pm);
+			assertEquals("Bank of America", pm.getName());
 		}
 		
 		@Test
-		@DisplayName("testing expense and category mapping")
+		@DisplayName("testing payment method with expense mapping")
 		void test2() {
 			
-			assertNotNull(exp);
-			assertEquals("ads", exp.getCategory().getName());
+			assertNotNull(pm);
+			assertNotNull(pm.getExpenses());
+			assertTrue(pm.getExpenses().size() > 0);
 		}
-		
-		@Test
-		@DisplayName("testing expense and payment method mapping")
-		void test3() {
-			
-			assertNotNull(exp);
-			assertEquals("Bank of America", exp.getPaymentMethod().getName());
-		}
+
 
 }

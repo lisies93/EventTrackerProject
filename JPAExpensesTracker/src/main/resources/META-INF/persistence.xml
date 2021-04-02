@@ -11,7 +11,9 @@
 
    <!-- entities -->
    
+   <class>com.skilldistillery.expenses.entities.Category</class>
    <class>com.skilldistillery.expenses.entities.Expense</class>
+   <class>com.skilldistillery.expenses.entities.PaymentMethod</class>
    
    
    <!-- entities -->
