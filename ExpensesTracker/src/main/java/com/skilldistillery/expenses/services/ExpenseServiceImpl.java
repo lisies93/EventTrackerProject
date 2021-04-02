@@ -20,7 +20,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 	@Override
 	public List<Expense> allExpenses() {
 		// TODO Auto-generated method stub
-		return null;
+		return eRepo.findAll();
 	}
 
 	@Override
