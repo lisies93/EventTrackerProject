@@ -1,0 +1,3 @@
+rootProject.name = 'ExpensesTracker'
+
+includeFlat 'JPAExpensesTracker'
