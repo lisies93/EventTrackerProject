@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "payment_method")
 public class PaymentMethod {
@@ -21,6 +23,7 @@ public class PaymentMethod {
 	
 	private String type;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "paymentMethod")
 	private List<Expense> expenses;
 	
