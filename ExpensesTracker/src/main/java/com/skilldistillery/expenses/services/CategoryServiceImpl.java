@@ -26,12 +26,20 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public Category findById(int id) {
 		Category c = null;
-		
+
 		Optional<Category> oCat = catRepo.findById(id);
-		if(oCat.isPresent()) {
+		if (oCat.isPresent()) {
 			c = oCat.get();
 		}
-		
+
 		return c;
+	}
+
+	@Override
+	public Category create(Category cat) {
+
+		catRepo.saveAndFlush(cat);
+
+		return cat;
 	}
 }

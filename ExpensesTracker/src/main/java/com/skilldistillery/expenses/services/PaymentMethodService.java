@@ -8,4 +8,5 @@ public interface PaymentMethodService {
 
 	List<PaymentMethod> AllPaymentMethods();
 	PaymentMethod findById(int id);
+	PaymentMethod create(PaymentMethod pm);
 }

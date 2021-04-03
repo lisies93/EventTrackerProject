@@ -35,4 +35,10 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 		return p;
 	}
 
+	@Override
+	public PaymentMethod create(PaymentMethod pm) {
+		pmRepo.saveAndFlush(pm);
+		return pm;
+	}
+
 }
