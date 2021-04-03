@@ -10,6 +10,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 
 	List<Expense> findByNameLikeOrDescriptionLikeIgnoreCase(String name, String desc);
 	List<Expense> findByCategory_Id(int id);
+	List<Expense> findByPaymentMethod_Id(int id);
+	List<Expense> findByActiveTrue();
 
 	
 }

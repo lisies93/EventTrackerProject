@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.skilldistillery.expenses.entities.Expense;
 import com.skilldistillery.expenses.repositories.CategoryRepository;
 import com.skilldistillery.expenses.repositories.ExpenseRepository;
+import com.skilldistillery.expenses.repositories.PaymentMethodRepository;
 
 @Service
 @Transactional
@@ -21,6 +22,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Autowired
 	private CategoryRepository catRepo;
+
+	@Autowired
+	private PaymentMethodRepository pmRepo;
 
 	@Override
 	public List<Expense> allExpenses() {
@@ -67,15 +71,30 @@ public class ExpenseServiceImpl implements ExpenseService {
 	}
 
 	@Override
-	public Expense delete(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean delete(int id) {
+		boolean expenseWasDeleted = false;
+
+		Expense exp = retrieveExpense(id);
+		
+		if(exp != null) {
+			exp.getCategory().removeExpense(exp);
+			exp.getPaymentMethod().removeExpense(exp);
+			eRepo.deleteById(id);
+			expenseWasDeleted = true;
+		}
+
+
+		return expenseWasDeleted;
 	}
 
 	@Override
-	public Expense softDelete(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean softDelete(int id) {
+		Expense e = retrieveExpense(id);
+		e.setActive(false);
+		if (e.getActive() == false) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -87,6 +106,20 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 		return eRepo.findByCategory_Id(catId);
 
+	}
+
+	@Override
+	public List<Expense> findExpensesByPaymentMethodId(int pId) {
+		if (!pmRepo.existsById(pId)) {
+			return null;
+		}
+
+		return eRepo.findByPaymentMethod_Id(pId);
+	}
+
+	@Override
+	public List<Expense> allActiveExpenses() {
+		return eRepo.findByActiveTrue();
 	}
 
 }

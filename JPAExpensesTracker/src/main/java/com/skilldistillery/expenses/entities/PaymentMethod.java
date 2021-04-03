@@ -1,5 +1,6 @@
 package com.skilldistillery.expenses.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -53,6 +54,26 @@ public class PaymentMethod {
 		this.type = type;
 	}
 
+	public void addExpenses(Expense exp) {
+		if(expenses==null) expenses = new ArrayList<>();
+		
+		if(!expenses.contains(exp)) {
+			expenses.add(exp);
+			if(exp.getPaymentMethod() != null) {
+				exp.getPaymentMethod().getExpenses().remove(exp);
+			}
+			exp.setPaymentMethod(this);
+		}
+		
+	}
+	
+	public void removeExpense(Expense exp) {
+		exp.setPaymentMethod(null);
+		if(expenses != null) {
+			expenses.remove(exp);
+		}
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

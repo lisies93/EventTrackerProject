@@ -1,5 +1,6 @@
 package com.skilldistillery.expenses.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -48,6 +49,27 @@ public class Category {
 	public void setExpenses(List<Expense> expenses) {
 		this.expenses = expenses;
 	}
+	
+	public void addExpenses(Expense exp) {
+		if(expenses==null) expenses = new ArrayList<>();
+		
+		if(!expenses.contains(exp)) {
+			expenses.add(exp);
+			if(exp.getCategory() != null) {
+				exp.getCategory().getExpenses().remove(exp);
+			}
+			exp.setCategory(this);
+		}
+		
+	}
+	
+	public void removeExpense(Expense exp) {
+		exp.setCategory(null);
+		if(expenses != null) {
+			expenses.remove(exp);
+		}
+	}
+
 
 	@Override
 	public int hashCode() {
