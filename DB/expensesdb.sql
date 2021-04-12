@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `expense` (
 ENGINE = InnoDB;
 
 SET SQL_MODE = '';
-DROP USER IF EXISTS user@localhost;
+-- DROP USER IF EXISTS user@localhost;
 SET SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 CREATE USER 'user'@'localhost' IDENTIFIED BY 'user';
 
@@ -209,4 +209,3 @@ INSERT INTO `expense` (`id`, `name`, `description`, `amount`, `created_date`, `a
 INSERT INTO `expense` (`id`, `name`, `description`, `amount`, `created_date`, `active`, `payment_method_id`, `category_id`) VALUES (92, 'NORD VPN', '', 11.95, '2020-01-26', 1, 3, 4);
 
 COMMIT;
-

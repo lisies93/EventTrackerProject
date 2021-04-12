@@ -1,5 +1,6 @@
 package com.skilldistillery.expenses.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +49,17 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Override
 	public Expense create(Expense exp) {
+		
+		if (exp.getActive() == null ) {
+			exp.setActive(true);
+		}
+		
+		LocalDate lt
+        = LocalDate.now();
+		
+		if (exp.getCreatedDate() == null) {
+			exp.setCreatedDate(lt);
+		}
 		return eRepo.saveAndFlush(exp);
 	}
 

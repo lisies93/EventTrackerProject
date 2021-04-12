@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expenses Tracker</title>
+    <script src="js/script.js"></script>
+</head>
+<body>
+    <h1>Welcome!</h1>
+    <head id="header"></head>
+    <main id="main">
+        
+        <div id="expenseById">
+        <form name="expenseFormById">
+            <input type="number" name="expenseId">
+            <button name="lookup">Get expense by Id</button>
+        </form>
+        </div>
+
+         <br><br>
+
+         <div id="expenseDetails"></div>  
+
+         <br>
+
+         <div id="errors"></div>
+
+         <br><br>
+<hr><br><br>
+        <button id="createExpense" name="create">Create new Expense</button>
+
+        <div id="createExpenseDiv">
+ 
+       </div>
+
+   <br><br>
+   <hr>
+   <br><br>
+<div id="updateById">
+    <form name="expenseUpdateFormById">
+        <input type="number" name="expenseId">
+        <button name="lookup">Update expense By Id</button>
+    </form>
+    </div>
+
+   <div id="updateExpenseDiv">
+     
+</div>
+
+<br><br>
+<hr><br><br>
+<div id="deleteById">
+    <form name="expenseDeleteFormById">
+        <input type="number" name="expenseId">
+        <button name="lookup">Delete expense By Id</button>
+    </form>
+    </div>
+    <div id="deleteMsg"></div>
+
+
+        <br><br>
+<hr><br><br>
+        <button id="allExpenses" name="lookup">Show all expenses</button>
+        <br>
+        <div id="expensesTable"></div>
+
+       
+ 
+        </div>
+    </main>
+
+</body>
+</html>

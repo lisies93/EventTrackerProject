@@ -79,10 +79,12 @@ public class ExpenseController {
 	}
 	
 	@PutMapping(path = "expenses/{id}")
-	public Expense update(@PathVariable int id, @RequestBody Expense exp, HttpServletResponse resp) {
-
+	public Expense update(@PathVariable String id, @RequestBody Expense exp, HttpServletResponse resp) {
+       
+		int newId = Integer.parseInt(id);
+		
 		try {
-			exp = eServ.update(exp, id);
+			exp = eServ.update(exp, newId);
 			if (exp == null) {
 				resp.setStatus(404);
 			}
