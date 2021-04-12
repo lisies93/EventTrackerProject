@@ -17,7 +17,7 @@ function init(){
     document.getElementById('allExpenses').addEventListener('click', loadExpenses);
 
 
-    document.getElementById('createExpense').addEventListener('click', createExpenseForm);
+    document.getElementById('createExpense').addEventListener('click', loadCategoriesToCreateExpense);
 
 
     document.expenseDeleteFormById.lookup.addEventListener('click', function(event) {
@@ -71,7 +71,7 @@ function getExpense(expenseId) {
         if (xhr.status === 200) {
   
           let expense = JSON.parse(xhr.responseText);
-          updateExpenseForm(expense);
+          loadCategoriesToUpdateExpense(expense);
         } else {
           displayError(`Expense id ${expenseId} not found`);
         }
@@ -93,6 +93,8 @@ function getExpense(expenseId) {
     let createExpenseDiv = document.getElementById('createExpenseDiv');
     createExpenseDiv.textContent = '';
     let updateExpenseDiv = document.getElementById('updateExpenseDiv');
+    updateExpenseDiv.textContent = '';
+    let deleteMsg = document.getElementById('deleteMsg');
     updateExpenseDiv.textContent = '';
   
     var h1 = document.createElement('h1');
@@ -144,7 +146,8 @@ function loadExpenses(e){
      xhr.send();
 }
 
-function loadCategories(e){
+function loadCategoriesToCreateExpense(e){
+    e.preventDefault();
    
      let xhr = new XMLHttpRequest();
 
@@ -154,49 +157,220 @@ function loadCategories(e){
              if(xhr.status === 200){
                  var categories = JSON.parse(xhr.responseText);
                  console.log(categories);
-                 return JSON.parse(xhr.responseText);
-                 //  displayCategories(categories);
+                 
+                 loadPaymentsToCreateExpense(categories);
              } else {
                  displayError('Error retrieving categories');             
                 }
-                return JSON.parse(xhr.responseText);
+            
          }
        
      };
     
      xhr.send();
-     return xhr.onreadystatechange();
+ 
    
     
 }
 
+function loadPaymentsToCreateExpense(categories){
+   
+    let xhr = new XMLHttpRequest();
+
+    xhr.open('GET', 'api/payments');
+    xhr.onreadystatechange = function (){
+        if(xhr.readyState === 4){
+            if(xhr.status === 200){
+                var payments = JSON.parse(xhr.responseText);
+                createExpenseForm(categories,payments);
+                
+            } else {
+                displayError('Error retrieving categories');             
+               }
+             
+        }
+      
+    };
+   
+    xhr.send();
+    
+  
+   
+}
+
+
+function loadCategoriesToUpdateExpense(expense){
+   
+     let xhr = new XMLHttpRequest();
+
+     xhr.open('GET', 'api/categories');
+     xhr.onreadystatechange = function (){
+         if(xhr.readyState === 4){
+             if(xhr.status === 200){
+                 var categories = JSON.parse(xhr.responseText);
+                 console.log(categories);
+                 
+                 loadPaymentsToUpdateExpense(categories,expense);
+             } else {
+                 displayError('Error retrieving categories');             
+                }
+            
+         }
+       
+     };
+    
+     xhr.send();
+ 
+   
+    
+}
+
+function loadPaymentsToUpdateExpense(categories,expense){
+   
+    let xhr = new XMLHttpRequest();
+
+    xhr.open('GET', 'api/payments');
+    xhr.onreadystatechange = function (){
+        if(xhr.readyState === 4){
+            if(xhr.status === 200){
+                var payments = JSON.parse(xhr.responseText);
+                updateExpenseForm(expense,categories,payments);
+                
+            } else {
+                displayError('Error retrieving categories');             
+               }
+             
+        }
+      
+    };
+   
+    xhr.send();
+    
+  
+   
+}
+
+
+
 function displayError(msg){
-    let expenseIdDiv = document.getElementById('expenseDetails');
-    expenseIdDiv.textContent = '';
-    let div = document.getElementById('errors');
-    div.textContent = '';
+    let errorDiv = document.getElementById('errors');
+    errorDiv.textContent = '';
+    let allExpensesDiv = document.getElementById('expensesTable');
+    allExpensesDiv.textContent = '';
+    var dataDiv = document.getElementById('expenseDetails');
+    dataDiv.textContent = '';
+    let createExpenseDiv = document.getElementById('createExpenseDiv');
+    createExpenseDiv.textContent = '';
+    let updateExpenseDiv = document.getElementById('updateExpenseDiv');
+    updateExpenseDiv.textContent = '';
+    let deleteMsg = document.getElementById('deleteMsg');
+    updateExpenseDiv.textContent = '';
     let h3 = document.createElement('h3');
     h3.textContent = msg;
-    div.appendChild(h3);
+    errorDiv.appendChild(h3);
 }
 
 function displayExpenses(expenses){
     let errorDiv = document.getElementById('errors');
     errorDiv.textContent = '';
-let expenseDetailsDiv = document.getElementById('expenseDetails');
- expenseDetailsDiv.textContent = '';
+    let allExpensesDiv = document.getElementById('expensesTable');
+    allExpensesDiv.textContent = '';
+    var dataDiv = document.getElementById('expenseDetails');
+    dataDiv.textContent = '';
+    let createExpenseDiv = document.getElementById('createExpenseDiv');
+    createExpenseDiv.textContent = '';
+    let updateExpenseDiv = document.getElementById('updateExpenseDiv');
+    updateExpenseDiv.textContent = '';
+    let deleteMsg = document.getElementById('deleteMsg');
+    updateExpenseDiv.textContent = '';
   let div = document.getElementById('expensesTable');
-for (const expense of expenses) {
-    let li = document.createElement('li');
-    li.textContent = expense.name;
-    div.appendChild(li);
+
+
+  var table = document.createElement('table');
+  table.classList = "table table-striped table-hover";
+  var thead = document.createElement('thead');
+  var tableRow = document.createElement('tr');
+
+var expense = expenses[0];
+
+  for (var p in expense) {
+      if(p !== 'active'){
+        var th = document.createElement('th');
+  th.textContent = p;
+  th.style.border = '1px solid black';
+  tableRow.appendChild(th);
+      }
+ 
+  }
+
+  thead.appendChild(tableRow);
+  table.appendChild(thead);
+
+
+var tbody = document.createElement('tbody');
+
+for (var i = 0; i < expenses.length; i++) {
+  var tr = document.createElement('tr');
+  for (var p in expenses[i]) {
+      if(p !== 'active'){
+
+      
+      if(p === 'category' || p === 'paymentMethod'){
+        var td = document.createElement('td');
+        td.textContent = expenses[i][p].name;
+        td.style.border = '1px solid black';
+        td.style.backgroundColor = 'white';
+        tr.appendChild(td);
+      } else {
+          if(p === 'amount'){
+            var td = document.createElement('td');
+            td.textContent = '$'+expenses[i][p];
+            td.style.border = '1px solid black';
+            td.style.backgroundColor = 'white';
+            tr.appendChild(td); 
+          } else{
+        var td = document.createElement('td');
+        td.textContent = expenses[i][p];
+        td.style.border = '1px solid black';
+        td.style.backgroundColor = 'white';
+        tr.appendChild(td);
+    }
+        }
+      }
+   
+
+  }
+  tbody.appendChild(tr);
 }
 
+ table.appendChild(tbody);
+ table.style.border = '1px solid black';
+ table.style.backgroundColor = 'pink';
+
+  document.body.appendChild(table);
+
+
 }
 
- function createExpenseForm(e){
-    e.preventDefault();
+ function createExpenseForm(categories,payments){
+    let errorDiv = document.getElementById('errors');
+    errorDiv.textContent = '';
+    let allExpensesDiv = document.getElementById('expensesTable');
+    allExpensesDiv.textContent = '';
+    var dataDiv = document.getElementById('expenseDetails');
+    dataDiv.textContent = '';
+    let createExpenseDiv = document.getElementById('createExpenseDiv');
+    createExpenseDiv.textContent = '';
+    let updateExpenseDiv = document.getElementById('updateExpenseDiv');
+    updateExpenseDiv.textContent = '';
+    let deleteMsg = document.getElementById('deleteMsg');
+    updateExpenseDiv.textContent = '';
 
+    let cat = [];
+    cat = categories;
+    let pay = [];
+    pay = payments;
+    
     let createDiv = document.getElementById('createExpenseDiv');
 
     let h3 = document.createElement('h3');
@@ -216,6 +390,7 @@ for (const expense of expenses) {
     input.type = 'text';
     input.name = 'name';
     input.placeholder = 'Name';
+    input.required = true;
     form.appendChild(input);
     form.appendChild(br);
     br = document.createElement('BR');
@@ -230,6 +405,7 @@ for (const expense of expenses) {
     textArea.cols = 30;
     textArea.name = 'description';
     textArea.placeholder = 'Description';
+    input.required = true;
     form.appendChild(textArea);
     br = document.createElement('BR');
     form.appendChild(br);
@@ -244,6 +420,7 @@ for (const expense of expenses) {
     input.type = 'number';
     input.name = 'amount';
     input.placeholder = 'Amount';
+    input.required = true;
     form.appendChild(input);
     br = document.createElement('BR');
     form.appendChild(br);
@@ -254,11 +431,15 @@ for (const expense of expenses) {
     label.for = 'paymentMethod';
     label.textContent = 'Payment Method ';
     form.appendChild(label);
-    input = document.createElement('input');
-    input.type = 'text';
-    input.name = 'paymentMethod';
-    input.placeholder = 'Payment Method';
-    form.appendChild(input);
+    let select = document.createElement('select');
+    select.name = 'payments';
+    form.appendChild(select);
+    for (let i= 0; i < pay.length; i++) {
+    let option = document.createElement('option');
+    option.text = pay[i].name;
+    option.value = pay[i].id;
+    select.add(option);    
+    }        
     br = document.createElement('BR');
     form.appendChild(br);
     br = document.createElement('BR');
@@ -268,11 +449,15 @@ for (const expense of expenses) {
     label.for = 'category';
     label.textContent = 'Category ';
     form.appendChild(label);
-    input = document.createElement('input');
-    input.type = 'text';
-    input.name = 'category';
-    input.placeholder = 'Category';
-    form.appendChild(input);
+    select = document.createElement('select');
+    select.name = 'categories';
+    form.appendChild(select);
+    for (let i= 0; i < cat.length; i++) {
+    let option = document.createElement('option');
+    option.text = cat[i].name;
+    option.value = cat[i].id;
+    select.add(option);    
+    }        
     br = document.createElement('BR');
     form.appendChild(br);
     br = document.createElement('BR');
@@ -282,24 +467,21 @@ for (const expense of expenses) {
     input.type = 'submit';
     input.name = 'createSubmit';
     input.value = 'Create Expense';
-    input.addEventListener('click', createExpense);
+    input.classList = "btn btn-secondary";
+    input.addEventListener('click', function (e){
+        document.getElementsByTagName('input').required = true;
+        
+        createExpense(e);
+    });
     form.appendChild(input);
     br = document.createElement('BR');
     form.appendChild(br);
 
 
-//  console.log(categories);
-//  let select = document.getElementById('category');
-//  categories.forEach((item, i) => {
-//      console.log('item[i]');
-//      let option = document.createElement('option');
-//      option.value = item[i].name;
-//      option.textContent = item[i].name;
-//      select.appendChild(option);
-//  });
 }
 
 
+// CREATE EXPENSE ---------------------------
 
 
 var createExpense = function(e) {
@@ -311,9 +493,9 @@ e.preventDefault();
       description: exp.description.value,
       amount: exp.amount.value,
       paymentMethod: {
-         id: exp.paymentMethod.value},
+         id: exp.payments.value},
       category: {
-          id : exp.category.value}
+          id : exp.categories.value}
     };
     postExpense(expense);
   }
@@ -345,9 +527,26 @@ e.preventDefault();
 
 
 
-// UPDATE EXPENSEEEEEEEEEEEEE -----------------------------
+// UPDATE EXPENSE -----------------------------
 
-function updateExpenseForm(expense){
+function updateExpenseForm(expense,categories,payments){
+    let errorDiv = document.getElementById('errors');
+    errorDiv.textContent = '';
+    let allExpensesDiv = document.getElementById('expensesTable');
+    allExpensesDiv.textContent = '';
+    var dataDiv = document.getElementById('expenseDetails');
+    dataDiv.textContent = '';
+    let createExpenseDiv = document.getElementById('createExpenseDiv');
+    createExpenseDiv.textContent = '';
+    let updateExpenseDiv = document.getElementById('updateExpenseDiv');
+    updateExpenseDiv.textContent = '';
+    let deleteMsg = document.getElementById('deleteMsg');
+    updateExpenseDiv.textContent = '';
+    let cat = [];
+    cat = categories;
+    let pay = [];
+    pay = payments;
+
 
     let updateDiv = document.getElementById('updateExpenseDiv');
 
@@ -409,29 +608,53 @@ function updateExpenseForm(expense){
     br = document.createElement('BR');
     form.appendChild(br);
 
+
+
     label = document.createElement('label');
     label.for = 'paymentMethod';
     label.textContent = 'Payment Method ';
     form.appendChild(label);
-    input = document.createElement('input');
-    input.type = 'text';
-    input.name = 'paymentMethod';
-    input.value = expense.paymentMethod.name
-    form.appendChild(input);
+    let select = document.createElement('select');
+    select.name = 'payments';
+    form.appendChild(select);
+    for (let i= 0; i < pay.length; i++) {
+    let option = document.createElement('option');
+    option.text = pay[i].name;
+    if(pay[i].id === expense.paymentMethod.id){
+        option.value = expense.paymentMethod.id;
+        option.name = expense.paymentMethod.name;
+        option.selected = 'selected';
+    } else{
+        option.value = pay[i].id;
+    }
+    select.add(option);    
+    }        
     br = document.createElement('BR');
     form.appendChild(br);
     br = document.createElement('BR');
     form.appendChild(br);
 
+
+
     label = document.createElement('label');
     label.for = 'category';
     label.textContent = 'Category ';
     form.appendChild(label);
-    input = document.createElement('input');
-    input.type = 'text';
-    input.name = 'category';
-    input.value = expense.category.name;
-    form.appendChild(input);
+    select = document.createElement('select');
+    select.name = 'categories';
+    form.appendChild(select);
+    for (let i= 0; i < cat.length; i++) {
+    let option = document.createElement('option');
+    option.text = cat[i].name;
+    if(cat[i].id === expense.category.id){
+        option.value = expense.category.id;
+        option.name = expense.category.name;
+        option.selected = 'selected';
+    } else{
+        option.value = cat[i].id;
+    }
+    select.add(option);    
+    }        
     br = document.createElement('BR');
     form.appendChild(br);
     br = document.createElement('BR');
@@ -440,22 +663,14 @@ function updateExpenseForm(expense){
     input = document.createElement('input');
     input.type = 'submit';
     input.name = 'submit';
+    input.classList = "btn btn-secondary";
     input.value = 'Update Expense';
     input.addEventListener('click', updateExpense);
     form.appendChild(input);
     br = document.createElement('BR');
     form.appendChild(br);
 
-
-//  console.log(categories);
-//  let select = document.getElementById('category');
-//  categories.forEach((item, i) => {
-//      console.log('item[i]');
-//      let option = document.createElement('option');
-//      option.value = item[i].name;
-//      option.textContent = item[i].name;
-//      select.appendChild(option);
-//  });
+    document.getElementsByTagName('input').required = true;
 
 }
 
@@ -469,9 +684,9 @@ var updateExpense = function(e) {
           description: exp.description.value,
           amount: exp.amount.value,
           paymentMethod: {
-             id: exp.paymentMethod.value},
+             id: exp.payments.value},
           category: {
-              id : exp.category.value}
+              id : exp.categories.value}
         };
         console.log(expense);
         putExpense(expense);
@@ -504,7 +719,7 @@ var updateExpense = function(e) {
 
 
 
-      // DELETEEE EXPENSEEEEEE
+      // DELETE EXPENSE
        
 
       function deleteExpense(expenseId){
@@ -532,6 +747,18 @@ var updateExpense = function(e) {
    }
 
    function deleteMsg(msg){
+    let errorDiv = document.getElementById('errors');
+    errorDiv.textContent = '';
+    let allExpensesDiv = document.getElementById('expensesTable');
+    allExpensesDiv.textContent = '';
+    var dataDiv = document.getElementById('expenseDetails');
+    dataDiv.textContent = '';
+    let createExpenseDiv = document.getElementById('createExpenseDiv');
+    createExpenseDiv.textContent = '';
+    let updateExpenseDiv = document.getElementById('updateExpenseDiv');
+    updateExpenseDiv.textContent = '';
+    let deleteMsg = document.getElementById('deleteMsg');
+    updateExpenseDiv.textContent = '';
     let expenseIdDiv = document.getElementById('expenseDetails');
     expenseIdDiv.textContent = '';
     let deleteDiv = document.getElementById('deleteMsg');
