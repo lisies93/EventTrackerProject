@@ -283,7 +283,7 @@ function displayExpenses(expenses){
     updateExpenseDiv.textContent = '';
     let deleteMsg = document.getElementById('deleteMsg');
     updateExpenseDiv.textContent = '';
-  let div = document.getElementById('expensesTable');
+  
 
 
   var table = document.createElement('table');
@@ -677,6 +677,10 @@ function updateExpenseForm(expense,categories,payments){
 
 var updateExpense = function(e) {
     e.preventDefault();
+
+    let allExpensesDiv = document.getElementById('expensesTable');
+    allExpensesDiv.textContent = '';
+
         var exp = document.updateForm;
         var expense = {
           id: exp.id.value,
