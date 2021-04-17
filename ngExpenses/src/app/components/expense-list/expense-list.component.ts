@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'src/app/models/category';
 import { Expense } from 'src/app/models/expense';
 import { PaymentMethod } from 'src/app/models/payment-method';
+import { FilterByPipe } from 'src/app/pipes/filter-by.pipe';
 import { CategoryService } from 'src/app/services/category.service';
 import { ExpenseService } from 'src/app/services/expense.service';
 import { PaymentMethodService } from 'src/app/services/payment-method.service';
@@ -29,12 +30,16 @@ selected = null;
 
   selectedFilterBy : string = 'all';
   value : string = '';
+  start : string = '';
+  end : string = '';
 
   constructor(private expService : ExpenseService,
     private route: ActivatedRoute,
     private router : Router,
     private catService : CategoryService,
-    private payServive : PaymentMethodService  ) { }
+    private payServive : PaymentMethodService,
+    private filterBy : FilterByPipe
+      ) { }
 
   ngOnInit(): void {
 
@@ -107,7 +112,7 @@ loadPayments() : void{
 
 
   getNumberOfExpenses() : number{
-    return this.expenses.length;
+    return this.filterBy.transform(this.expenses,this.selectedFilterBy,this.value,this.start,this.end).length;
   }
 
   displayExpense(exp) : void{

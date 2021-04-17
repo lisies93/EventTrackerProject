@@ -18,7 +18,8 @@ import { FilterByPipe } from './pipes/filter-by.pipe';
   declarations: [
     AppComponent,
     ExpenseListComponent,
-    FilterByPipe,
+    FilterByPipe
+
   ],
   imports: [
     BrowserModule,
@@ -29,7 +30,8 @@ import { FilterByPipe } from './pipes/filter-by.pipe';
   providers: [
     ExpenseService,
     CategoryService,
-    PaymentMethodService
+    PaymentMethodService,
+    FilterByPipe
   ],
   bootstrap: [AppComponent]
 })

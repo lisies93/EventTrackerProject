@@ -31,14 +31,14 @@
 
 <div *ngIf="!selected">
   <br>
-  Name: <input type="text" name="name"  [(ngModel)]="newExpense.name"> <br><br>
+  Name: <input type="text" name="name"  [(ngModel)]="newExpense.name" > <br><br>
   Description: <input type="text" name="description"  [(ngModel)]="newExpense.description"> <br><br>
-  Amount: <input type="text" name="amount"  [(ngModel)]="newExpense.amount"> <br><br>
-  Date of Transaction: <input type="date" name="createdDate" [(ngModel)]="newExpense.createdDate"/> <br> <br>
-  Payment Method : <select name="paymentMethod" [(ngModel)]="newExpense.paymentMethod"> <br><br>
+  Amount: <input type="text" name="amount"  [(ngModel)]="newExpense.amount" > <br><br>
+  Date of Transaction: <input type="date" name="createdDate" [(ngModel)]="newExpense.createdDate" /> <br> <br>
+  Payment Method : <select name="paymentMethod" [(ngModel)]="newExpense.paymentMethod" > <br><br>
     <option *ngFor="let pay of payments" value={{pay}} [ngValue]="pay">{{pay.name}}</option>
   </select> <br><br>
-  Category : <select name="category" [(ngModel)]="newExpense.category">
+  Category : <select name="category" [(ngModel)]="newExpense.category" >
     <option *ngFor="let cat of categories" value={{cat}} [ngValue]="cat">{{cat.name}}</option>
   </select>
 <br><br>
@@ -46,6 +46,23 @@
   <br>
   <br>
   </div>
+<hr>
+  <div *ngIf="!selected">
+<br>
+      Filter by Payment Method: <select  name="paymentMethod" (click)= "selectedFilterBy = 'payment'" [(ngModel)]="value">
+      <option *ngFor="let pay of payments" value={{pay}} [ngValue]="pay.name"  >{{pay.name}}</option>
+    </select> <br> <br>
+    Filter by Category: <select  name="category" (click)= "selectedFilterBy = 'category'" [(ngModel)]="value">
+      <option *ngFor="let cat of categories" value={{cat}} [ngValue]="cat.name"  >{{cat.name}}</option>
+    </select> <br> <br>
+    Filter by Date range: <br>
+    Start date : <input (click)= "selectedFilterBy = 'date'" type="date" name="startDate" [(ngModel)]="start"/>  End date : <input (click)= "selectedFilterBy = 'date'" type="date" name="endDate" [(ngModel)]="end"/> <br><br>
+
+
+    <button class="btn btn" style="background-color:  pink" (click)="selectedFilterBy = 'all'">Show All</button> <br><br>
+    </div>
+    <br>
+    <br>
 
 <table class="table table-striped table-hover" *ngIf="!selected">
   <thead class="thead thead" style="background-color: pink;">
@@ -56,7 +73,7 @@
     <th></th>
   </thead>
   <tbody>
-    <tr  *ngFor="let exp of expenses" >
+    <tr  *ngFor="let exp of expenses | filterBy:selectedFilterBy:value:start:end" >
       <td (click)="displayExpense(exp)" >{{exp.id}}</td>
       <td (click)="displayExpense(exp)">{{exp.name}}</td>
       <td (click)="displayExpense(exp)">{{exp.description}}</td>
