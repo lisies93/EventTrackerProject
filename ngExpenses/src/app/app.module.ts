@@ -9,17 +9,22 @@ import { ExpenseListComponent } from './components/expense-list/expense-list.com
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from './services/category.service';
 import { PaymentMethodService } from './services/payment-method.service';
+import { FilterByPipe } from './pipes/filter-by.pipe';
+
+
+
 
 @NgModule({
   declarations: [
     AppComponent,
     ExpenseListComponent,
+    FilterByPipe,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [
     ExpenseService,

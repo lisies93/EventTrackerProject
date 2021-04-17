@@ -17,7 +17,7 @@ export class ExpenseListComponent implements OnInit {
  expenses : Expense[] = [];
 
  title : String = 'Expenses';
-  selected = null;
+selected = null;
 
   newExpense : Expense = new Expense();
 
@@ -27,7 +27,8 @@ export class ExpenseListComponent implements OnInit {
 
   payments : PaymentMethod[] = [];
 
-  catId: number =0;
+  selectedFilterBy : string = 'all';
+  value : string = '';
 
   constructor(private expService : ExpenseService,
     private route: ActivatedRoute,
@@ -118,8 +119,6 @@ loadPayments() : void{
   }
 
   addExpense(): void{
-
-    console.log(this.newExpense.category);
 
     this.expService.create(this.newExpense).subscribe(
       data => {

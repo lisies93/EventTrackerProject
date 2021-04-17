@@ -3,7 +3,7 @@
 <div *ngIf="selected && !editExpense" >
   <h2>{{selected.id}}. {{selected.name}}</h2>
   <blockquote>{{selected.description}}</blockquote>
-  <h4>Amount: </h4><p>{{selected.amount}}</p>
+  <h4>Amount: </h4><p>{{selected.amount | currency}}</p>
   <h4>Date: </h4><p>{{selected.createdDate}}</p>
   <h4>Payment Method: </h4><p>{{selected.paymentMethod.name}}</p>
   <h4>Category: </h4><p>{{selected.category.name}}</p>
@@ -13,32 +13,35 @@
  </div>
 
 <div *ngIf="editExpense">
-  <input type="hidden" name="id" [(ngModel)]="editExpense.id">
-  Name : <input type="text" name="name" placeholder="{{selected.name}}" [(ngModel)]="editExpense.name">
-  Description : <textarea name="description" cols="30" rows="10" placeholder="{{selected.description}}" [(ngModel)]="editExpense.description"></textarea>
-  Amount: <input type="number" name="amount" placeholder="{{selected.amount}}" [(ngModel)]="editExpense.description"/><br />
-  Payment Method : <select name="paymentMethod" [(ngModel)]="editExpense.paymentMethod">
-    <option *ngFor="let pay of payments" value={{pay}} [ngValue]="pay">{{pay.name}}</option>
-  </select>
+  <input type="hidden" name="id" [(ngModel)]="editExpense.id"> <br>
+  Name : <input type="text" name="name" placeholder="{{selected.name}}" [(ngModel)]="editExpense.name"> <br> <br>
+  Description : <br> <textarea name="description" cols="30" rows="10" [(ngModel)]="editExpense.description">{{selected.description}}</textarea> <br> <br>
+  Amount: <input type="number" name="amount" placeholder="{{selected.amount}}" [(ngModel)]="editExpense.amount"/><br /> <br>
+  Date of Transaction: <input type="date" name="createdDate" [(ngModel)]="editExpense.createdDate"/> <br> <br>
+  Payment Method : <select  name="paymentMethod" [(ngModel)]="editExpense.paymentMethod">
+    <option *ngFor="let pay of payments" value={{pay}} [ngValue]="pay" selected="{{selected.paymentMethod}}" >{{pay.name}}</option>
+  </select> <br> <br>
   Category : <select name="category" [(ngModel)]="editExpense.category">
     <option *ngFor="let cat of categories" value={{cat}} [ngValue]="cat">{{cat.name}}</option>
   </select>
-  <br>
+  <br> <br>
   <input class="btn btn-outline-success" type="submit" value="Save" (click)="updateExpense(editExpense)"/>
   <input class="btn btn-outline-danger" type="submit" value="Cancel" (click)="editExpense = null"/>
 </div>
 
 <div *ngIf="!selected">
-  Name: <input type="text" name="name"  [(ngModel)]="newExpense.name">
-  Description: <input type="text" name="description"  [(ngModel)]="newExpense.description">
-  Amount: <input type="text" name="amount"  [(ngModel)]="newExpense.amount">
-  Payment Method : <select name="paymentMethod" [(ngModel)]="newExpense.paymentMethod">
+  <br>
+  Name: <input type="text" name="name"  [(ngModel)]="newExpense.name"> <br><br>
+  Description: <input type="text" name="description"  [(ngModel)]="newExpense.description"> <br><br>
+  Amount: <input type="text" name="amount"  [(ngModel)]="newExpense.amount"> <br><br>
+  Date of Transaction: <input type="date" name="createdDate" [(ngModel)]="newExpense.createdDate"/> <br> <br>
+  Payment Method : <select name="paymentMethod" [(ngModel)]="newExpense.paymentMethod"> <br><br>
     <option *ngFor="let pay of payments" value={{pay}} [ngValue]="pay">{{pay.name}}</option>
-  </select>
+  </select> <br><br>
   Category : <select name="category" [(ngModel)]="newExpense.category">
     <option *ngFor="let cat of categories" value={{cat}} [ngValue]="cat">{{cat.name}}</option>
   </select>
-
+<br><br>
   <input class="btn btn-outline-success" type="submit" (click)="addExpense() " value="Add Expense">
   <br>
   <br>

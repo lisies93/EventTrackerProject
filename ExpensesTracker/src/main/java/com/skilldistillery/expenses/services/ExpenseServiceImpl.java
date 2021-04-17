@@ -74,6 +74,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 			managedExpense.setAmount(exp.getAmount());
 			managedExpense.setPaymentMethod(exp.getPaymentMethod());
 			managedExpense.setCategory(exp.getCategory());
+			managedExpense.setCreatedDate(exp.getCreatedDate());
 			eRepo.saveAndFlush(managedExpense);
 			return managedExpense;
 		}
